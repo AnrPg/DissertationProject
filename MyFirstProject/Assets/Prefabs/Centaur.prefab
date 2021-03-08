@@ -887,7 +887,7 @@ Transform:
   m_GameObject: {fileID: 1120460948644401051}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.5000005, y: 3.5, z: 3.5000005}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
   m_Children:
   - {fileID: 8879106348376165971}
   - {fileID: 549194316388664404}
@@ -927,13 +927,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.64
-  m_Radius: 0.62
+  m_Height: 1.58
+  m_Radius: 0.36
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 0.83, z: 0}
 --- !u!54 &2088156052
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -944,7 +944,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 200
   m_Drag: 0
-  m_AngularDrag: 10
+  m_AngularDrag: 0.01
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -1005,7 +1005,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1120460948644401051}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f15df74393d624f43b0acc39afc18b2f, type: 3}
   m_Name: 
