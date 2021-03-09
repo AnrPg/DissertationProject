@@ -33,6 +33,11 @@ public class Patroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!agent.isOnNavMesh)
+        {
+            Destroy(this.gameObject);
+        }
+
         if (agent.pathPending)
         {
             return;

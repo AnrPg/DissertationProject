@@ -42,7 +42,10 @@ public class SceneController : MonoBehaviour
         playerLastSavedPosition = transform.TransformPoint(GameObject.Find("Character").transform.position); // TODO: put check for non-existence of "Character"
         playerCurrentPosition = transform.TransformPoint(GameObject.Find("Character").transform.position); // TODO: put check for non-existence of "Character"
         playerPreviousPosition = playerCurrentPosition;
-        Debug.Log("A: " + xTerrainPos + " B: " + xTerrainPos + terrainWidth + "\nC: " + zTerrainPos + " D " + zTerrainPos + terrainLength);
+        float width = xTerrainPos + terrainWidth;
+        float length = zTerrainPos + terrainLength;
+        //Debug.Log("xTerrainPos: " + xTerrainPos + " xTerrainPos + terrainWidth: " + width + "\nzTerrainPos: " + zTerrainPos + " zTerrainPos + terrainLength: " + length);
+        //Debug.Log("playerCurrentPosition: " + playerCurrentPosition);
         SpawnTarget(targetsSpawnedInNeighbor);
     }
 
@@ -71,22 +74,28 @@ public class SceneController : MonoBehaviour
                         
             Random.InitState(i + System.DateTime.Now.Millisecond);
             float xCoordinate;
+
+            float xLowestPoint = xTerrainPos + terrainWidth > xTerrainPos ? xTerrainPos : xTerrainPos + terrainWidth;
+            float xMaximumPoint = xTerrainPos + terrainWidth > xTerrainPos ? xTerrainPos + terrainWidth : xTerrainPos;
+
             do
             {
                 //xCoordinate = (float)(Random.Range(-neighborRadius, neighborRadius) * System.Math.Cos(Random.Range(0, 180)) + Mathf.Sign(playerCurrentPosition.x) * 0.55 * neighborRadius); // We don't need symmetry around player, because the most targets should be spawned in the front of player
                 xCoordinate = (float)(Random.Range(-neighborRadius, neighborRadius) * System.Math.Cos(Random.Range(0, 180)));
                 xCoordinate += playerCurrentPosition.x;
-            } while ( (xCoordinate > xTerrainPos) && (xCoordinate < xTerrainPos + terrainWidth) );
-            //Debug.Log("playerCurrentPosition.x: " + playerCurrentPosition.x + " xCoordinate: " + xCoordinate);
+            } while ( (xCoordinate < xLowestPoint) || (xCoordinate > xMaximumPoint) );
             
             Random.InitState(i + System.DateTime.Now.Millisecond);
             float zCoordinate;
+
+            float zLowestPoint = zTerrainPos + terrainLength > zTerrainPos ? zTerrainPos : zTerrainPos + terrainLength;
+            float zMaximumPoint = zTerrainPos + terrainLength > zTerrainPos ? xTerrainPos + terrainLength : zTerrainPos;
+
             do
             {
                 zCoordinate = (float)(Random.Range(-neighborRadius, neighborRadius) * System.Math.Sin(Random.Range(0, 180)));
                 zCoordinate += playerCurrentPosition.z;
-            } while ((zCoordinate < zTerrainPos) || (zCoordinate > zTerrainPos + terrainLength) );
-            Debug.Log("playerCurrentPosition.z: " + playerCurrentPosition.z + " zCoordinate: " + zCoordinate);
+            } while ((zCoordinate < zLowestPoint) || (zCoordinate > zMaximumPoint) );
             
             GameObject target = SpawnAboveTerrain(targetPrefab[Random.Range(0, targetPrefab.Length)], xCoordinate, zCoordinate);            
 
@@ -165,12 +174,16 @@ public class SceneController : MonoBehaviour
         Vector3 displacement = playerCurrentPosition - playerPreviousPosition;
         displacement.Normalize();
         displacement += new Vector3((float)(0.55 * neighborRadius), 0f, 0f);
+
         // make Vector3 with global coordinates xVal and zVal (Y doesn't matter):
         Vector3 signPosition = new Vector3(xCord, 0, zCord) + displacement;
+
         // Retrieve the terrain that is under the point called "signPosition"
         Terrain activeTerrain = GetClosestCurrentTerrain(signPosition);
+
         // set the Y coordinate according to terrain Y at that point:
         signPosition.y = activeTerrain.SampleHeight(signPosition) + activeTerrain.GetPosition().y;
+
         // you probably want to create the object a little above the terrain:
         signPosition.y += 0.5f; // move position 0.5 above the terrain
         return Instantiate(prefab, signPosition, Quaternion.identity) as GameObject;
