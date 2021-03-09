@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1912282062
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1912282063}
+  m_Layer: 0
+  m_Name: Eye
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1912282063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912282062}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3384738365265243601}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &159098222796737427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1440,7 +1470,6 @@ GameObject:
   - component: {fileID: 2525560825601147843}
   - component: {fileID: 5435655648746805438}
   - component: {fileID: 8430473905018767186}
-  - component: {fileID: 3759138505163283747}
   - component: {fileID: 3177879886984423061}
   m_Layer: 0
   m_Name: Troll_cannibal
@@ -1463,6 +1492,7 @@ Transform:
   - {fileID: 1936886455781250667}
   - {fileID: 6981549089906546568}
   - {fileID: 5648206962920495426}
+  - {fileID: 1912282063}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1568,22 +1598,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 3
---- !u!114 &3759138505163283747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6671363314133865219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15df74393d624f43b0acc39afc18b2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireballPrefab: {fileID: 8563109731504805606, guid: be0469dd9ca11a742b798df7a1c1919a,
-    type: 3}
-  speed: 1
-  obstacleRange: 5
 --- !u!114 &3177879886984423061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1597,6 +1611,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patrolTargets: []
+  target: {fileID: 4345695349998863133, guid: 700b491c2a1ad2243bbff9f7a4cbb7e6, type: 3}
+  eye: {fileID: 1912282063}
+  attackAnimationName:
+  - attack 1
+  - attack 2
+  - attack 3
+  - attack 4
+  walkAnimationName:
+  - walk
 --- !u!1 &6844139367906535907
 GameObject:
   m_ObjectHideFlags: 0

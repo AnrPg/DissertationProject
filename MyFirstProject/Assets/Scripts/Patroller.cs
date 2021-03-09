@@ -8,8 +8,14 @@ public class Patroller : MonoBehaviour
     private const int numOfPatrolTargets = 4; // Should this is changed, then the way patrolTargets[] is populated has also to be changed in Start()
 
     NavMeshAgent agent;
+    Animator anim;
     bool patrolling;
-    [SerializeField] private Transform[] patrolTargets;    
+    [SerializeField] private Transform[] patrolTargets;
+    [SerializeField] private Transform target;
+    [SerializeField] private Transform eye;
+    [SerializeField] private List<string> attackAnimationName;
+    [SerializeField] private List<string> walkAnimationName;
+    private Vector3 lastKnownPosition;
     private int destinationPointIndex;
     private bool arrived;
 
@@ -19,7 +25,10 @@ public class Patroller : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
         patrolTargets = new Transform[numOfPatrolTargets];
+
+        lastKnownPosition = transform.position;
 
         // Generate four patrol points at the nodes of a random square area around this Patroller
         Vector2 randDiskPoint = neighborRadius * Random.insideUnitCircle + new Vector2(transform.position.x, transform.position.z);
@@ -57,9 +66,40 @@ public class Patroller : MonoBehaviour
                 arrived = false;
             }
         }
+        if (CanSeeTarget())
+        {
+            agent.SetDestination(target.transform.position);
+            patrolling = false;
+
+            string randAttackAnim = attackAnimationName[Random.Range(0, attackAnimationName.Count)];
+
+            if (agent.remainingDistance < agent.stoppingDistance)
+            {
+                anim.SetBool(randAttackAnim, true);
+            }
+            else
+            {
+                anim.SetBool(randAttackAnim, false);
+            }
+        }
         else
 	    {
-            StartCoroutine("GoToNextPoint");
+            string randAttackAnim = attackAnimationName[Random.Range(0, attackAnimationName.Count)];
+            string randWalkAnim = walkAnimationName[Random.Range(0, walkAnimationName.Count)];
+
+            anim.SetBool(randAttackAnim, false);
+
+            if (!patrolling)
+            {
+                agent.SetDestination(lastKnownPosition);
+                if (agent.remainingDistance < agent.stoppingDistance)
+                {
+                    patrolling = true;
+                    StartCoroutine("GoToNextPoint");
+                }
+            }
+
+            anim.SetFloat(randWalkAnim, agent.velocity.sqrMagnitude);
 	    }
     }
 
@@ -76,6 +116,28 @@ public class Patroller : MonoBehaviour
         arrived = false;
         agent.destination = patrolTargets[destinationPointIndex].position;
         destinationPointIndex = (destinationPointIndex + 1) % patrolTargets.Length;
+    }
+
+    private bool CanSeeTarget()
+    {
+        bool canSee = false;
+        Ray ray = new Ray(eye.position, target.transform.position - eye.position);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.transform != target)
+            {
+                canSee = false;
+            }
+            else
+            {
+                lastKnownPosition = target.transform.position;
+                canSee = true;
+            }
+        }
+
+        return canSee;
     }
 
     private Terrain GetClosestCurrentTerrain(Vector3 playerPos)

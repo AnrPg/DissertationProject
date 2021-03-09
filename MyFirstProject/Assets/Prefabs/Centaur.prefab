@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1111692275
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1111692276}
+  m_Layer: 0
+  m_Name: Eye
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1111692276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1111692275}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0.366}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5511362578127695755}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2015663387139820
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,7 +899,6 @@ GameObject:
   - component: {fileID: 2255517779418558197}
   - component: {fileID: 5177872066718168157}
   - component: {fileID: 4507472133100313625}
-  - component: {fileID: 5180090953929548013}
   - component: {fileID: 6700526024025865658}
   m_Layer: 0
   m_Name: Centaur
@@ -894,6 +923,7 @@ Transform:
   - {fileID: 6645454451973724891}
   - {fileID: 2118293833661168945}
   - {fileID: 392246141368781774}
+  - {fileID: 1111692276}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -998,22 +1028,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 5
---- !u!114 &5180090953929548013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120460948644401051}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15df74393d624f43b0acc39afc18b2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireballPrefab: {fileID: 5580164901058122149, guid: 3cdf154ea80df114a893a7125ee5da9e,
-    type: 3}
-  speed: 3
-  obstacleRange: 5
 --- !u!114 &6700526024025865658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1026,6 +1040,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ee578cce65f7a45af393b87eacb0b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  patrolTargets: []
+  target: {fileID: 4345695349998863133, guid: 700b491c2a1ad2243bbff9f7a4cbb7e6, type: 3}
+  eye: {fileID: 1111692276}
+  attackAnimationName:
+  - Centaur_rig|attack1
+  - Centaur_rig|attack2
+  walkAnimationName:
+  - Centaur_rig|walk1
+  - Centaur_rig|walk2
 --- !u!1 &1245869412279243227
 GameObject:
   m_ObjectHideFlags: 0
