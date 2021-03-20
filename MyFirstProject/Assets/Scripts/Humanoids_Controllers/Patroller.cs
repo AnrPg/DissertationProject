@@ -8,13 +8,18 @@ public class Patroller : MonoBehaviour
     private const int numOfPatrolTargets = 4; // Should this is changed, then the way patrolTargets[] is populated has also to be changed in Start()
 
     NavMeshAgent agent;
+    Animator anim;
     bool patrolling;
+    [SerializeField] private List<int> attackAnimationName;
+    [SerializeField] private List<int> walkAnimationName;
     [SerializeField] private Transform[] patrolTargets;
-    [SerializeField] private Transform target;
+    private Transform target;
     [SerializeField] private Transform eye;
-    private Vector3 lastKnownPosition;
+    private Vector3 lastKnownPlayerPosition;
     private int destinationPointIndex;
     private bool arrived;
+
+    //[SerializeField] private Transform eyeCylinder;
 
     [SerializeField] private const float neighborRadius = 20.0f;
 
@@ -23,11 +28,20 @@ public class Patroller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();        
-        
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+        if (anim == null)
+        {
+            Debug.Log("No Animator!!!!!!!!!");
+        }
+
+        target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        //eyeCylinder = transform.Find("Cylinder");
         patrolTargets = new Transform[numOfPatrolTargets];
 
-        lastKnownPosition = transform.position;
+        lastKnownPlayerPosition = target.transform.position;
+        //Debug.Log(target.position + "\n" + transform.Find("Eye").name + ": " + transform.Find("Eye").transform.position + "\n" + transform.position + "\n" + (target.transform.position - eye.position).ToString() );
 
         // Generate four patrol points at the nodes of a random square area around this Patroller
         Vector2 randDiskPoint = neighborRadius * Random.insideUnitCircle + new Vector2(transform.position.x, transform.position.z);
@@ -41,6 +55,9 @@ public class Patroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //lastKnownPlayerPosition = target.transform.position;
+        //Debug.Log(transform.gameObject.name + ": " + target.position + "\n" + transform.Find("Eye").name + ": " + transform.Find("Eye").transform.position + "\n" + transform.position + "\n" + (target.transform.position - eye.position).ToString());
+
         if (!agent.isOnNavMesh)
         {
             Destroy(this.gameObject);
@@ -50,9 +67,11 @@ public class Patroller : MonoBehaviour
         {
             return;
         }
-
+                
         if (patrolling)
         {
+            anim.SetInteger("battle", 0);
+
             if (agent.remainingDistance < agent.stoppingDistance)
             {
                 if (!arrived)
@@ -60,40 +79,54 @@ public class Patroller : MonoBehaviour
                     arrived = true;
                     StartCoroutine("GoToNextPoint");
                 }
-            }else
+            }
+            else
             {
                 arrived = false;
             }
         }
+
         if (CanSeeTarget())
         {
             agent.SetDestination(target.transform.position);
-            patrolling = false;
             
-            if (agent.remainingDistance < agent.stoppingDistance)
+            patrolling = false;
+            //Debug.Log(transform.gameObject.name+ ": Aha! Found you! You are gonna die now!" + "\n" + agent.remainingDistance + "\n" + agent.stoppingDistance);
+
+            if (agent.remainingDistance < agent.stoppingDistance + 0.1)
             {
+                int randAttackAnim = attackAnimationName[Random.Range(0, attackAnimationName.Count)];
+                anim.SetInteger("battle", randAttackAnim);
                 Debug.Log(gameObject.name + ": Attack player!");
             }
             else
             {
-                // walk
+                // Has no effect at the moment, because at the end of Update() the speed is set again
+                anim.SetInteger("battle", 0);
+                anim.SetFloat("speed", 6);
+                //anim.SetFloat("speed", 6);
+                //return;
             }
         }
         else
-	    {            
+	    {
+            anim.SetInteger("battle", 0);
+            
             if (!patrolling)
             {
-                agent.SetDestination(lastKnownPosition);
+                //Debug.Log(gameObject.name + ": I lost you, but I am coming for you!");
+                agent.SetDestination(lastKnownPlayerPosition);
                 if (agent.remainingDistance < agent.stoppingDistance)
                 {
                     patrolling = true;
+                    Debug.Log(gameObject.name + ": Back to our base...");
                     StartCoroutine("GoToNextPoint");
                 }
             }
-
             //anim.SetInteger(randWalkAnim, 1);
             //anim.SetFloat(randWalkAnim, agent.velocity.sqrMagnitude);
         }
+        anim.SetFloat("speed", agent.velocity.magnitude); // Calibrate the agents speed and the animator's blending tree speed threshold.
     }
 
     IEnumerator GoToNextPoint()
@@ -115,6 +148,7 @@ public class Patroller : MonoBehaviour
     {
         bool canSee = false;
         Ray ray = new Ray(eye.position, target.transform.position - eye.position);
+        //StartCoroutine( CreateCylinderBetweenPoints(eye.position, target.transform.position - eye.position, 0.2f) );
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
@@ -125,7 +159,8 @@ public class Patroller : MonoBehaviour
             }
             else
             {
-                lastKnownPosition = target.transform.position;
+                lastKnownPlayerPosition = target.transform.position;
+                //Debug.Log(lastKnownPlayerPosition);
                 canSee = true;
             }
         }

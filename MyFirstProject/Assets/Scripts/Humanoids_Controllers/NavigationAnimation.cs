@@ -21,9 +21,10 @@ public class NavigationAnimation : MonoBehaviour
         }
 
         int randWalkAnim = walkAnimationName[Random.Range(0, walkAnimationName.Count)];
-        anim.SetInteger("battle", 0);
+        anim.SetFloat("speed", agent.velocity.magnitude);
+        //anim.SetInteger("battle", 0);
         //anim.SetBool("armed", true);
-        anim.SetInteger("moving", 1);
+        //anim.SetInteger("moving", 1);
     }
 
     // Update is called once per frame
